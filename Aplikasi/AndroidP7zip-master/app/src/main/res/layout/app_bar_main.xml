@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.hzy.p7zip.app.activity.MainActivity">
+    tools:context="com.hzy.p7zip.app.activity.StorageActivity">
+
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

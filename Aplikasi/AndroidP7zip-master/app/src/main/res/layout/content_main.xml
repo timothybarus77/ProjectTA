@@ -4,6 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/content_main_frame"
-    tools:context="com.hzy.p7zip.app.activity.MainActivity"
+    tools:context="com.hzy.p7zip.app.activity.StorageActivity"
     tools:showIn="@layout/app_bar_main">
 </FrameLayout>
