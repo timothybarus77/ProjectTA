@@ -1,11 +1,15 @@
 package com.hzy.p7zip.app.fragment;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,10 +17,15 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.blankj.utilcode.util.SnackbarUtils;
@@ -26,6 +35,7 @@ import com.hzy.p7zip.app.R;
 import com.hzy.p7zip.app.adapter.FileItemAdapter;
 import com.hzy.p7zip.app.adapter.PathItemAdapter;
 import com.hzy.p7zip.app.bean.FileInfo;
+import com.hzy.p7zip.app.bluetooth.mainbluetooth;
 import com.hzy.p7zip.app.command.Command;
 import com.hzy.p7zip.app.utils.FileUtils;
 
@@ -35,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -42,6 +53,7 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+
 
 import static android.support.v7.widget.LinearLayoutManager.HORIZONTAL;
 
@@ -51,6 +63,7 @@ public class StorageFragment extends Fragment
         implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener,
         View.OnLongClickListener {
 
+    private static final String TAG = "StorageFragment";
     private static final int REQUEST_READ_EXTERNAL_STORAGE = 1;
 
     @BindView(R.id.fragment_storage_path)
@@ -60,21 +73,25 @@ public class StorageFragment extends Fragment
     @BindView(R.id.fragment_storage_refresh)
     SwipeRefreshLayout mSwipeRefresh;
     @BindView(R.id.path_list_text)
-    TextView textView;
+    TextView stringPath;
 
 
+    File root, mCurFolder;
     private List<FileInfo> mCurFileInfoList;
     private String mCurPath;
     private FileItemAdapter mFileItemAdapter;
     private PathItemAdapter mFilePathAdapter;
     private ProgressDialog dialog;
-    File root, curFolder;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mCurFileInfoList = new ArrayList<>();
-        mCurPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+        mCurFolder = root;
+        mCurPath = root.toString();
+        //mCurPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED) {
             loadPathInfo(mCurPath);
@@ -103,8 +120,11 @@ public class StorageFragment extends Fragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View rootView = inflater.inflate(R.layout.fragment_storage, null);
+        //stringPath =(TextView) findViewById(R.id.path_list_text);
         ButterKnife.bind(this, rootView);
+
 
         mPathListView.setLayoutManager(new LinearLayoutManager(getContext(), HORIZONTAL, false));
         mPathListView.setAdapter(mFilePathAdapter = new PathItemAdapter(getActivity(), this));
@@ -122,6 +142,7 @@ public class StorageFragment extends Fragment
             public void subscribe(ObservableEmitter<List<FileInfo>> e) throws Exception {
                 mCurFileInfoList = FileUtils.getInfoListFromPath(path);
                 e.onNext(mCurFileInfoList);
+
                 e.onComplete();
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -142,7 +163,10 @@ public class StorageFragment extends Fragment
     public void onRefresh() {
         loadPathInfo(mCurPath);
     }
-
+    /**
+     * Methode to select file
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         Object tag = v.getTag();
@@ -152,15 +176,26 @@ public class StorageFragment extends Fragment
             FileInfo info = (FileInfo) tag;
             if (info.isFolder()) {
                 loadPathInfo(info.getFilePath());
-            } else {
-
+                Log.i("check", info.getFilePath());
+            }else{
+                /**
+                 * Parsing string ke intent sebelumnya untuk mengirimkan file
+                 */
+                String PathFile = info.getFilePath();
+                Bundle bundle = new Bundle();
+                bundle.putString("pathId", PathFile);
+                Intent i = new Intent(getContext(), mainbluetooth.class);
+                Log.i("check2", bundle.toString());
+                i.putExtras(bundle);
+                startActivity(i);
             }
         }
     }
 
 
+
     /**
-     * untuk compress, extract, dan remove file
+     * for compress, extract, and remove file
      * @param v
      * @return
      */
