@@ -58,53 +58,8 @@ public class StorageActivity extends AppCompatActivity
         mFragmentManager = getSupportFragmentManager();
         navigationView.setNavigationItemSelectedListener(this);
         showFragment(StorageFragment.class);
-        /*
-        Send = (Button) findViewById(R.id.Sendblue);
-        Send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendViaBluetooth();
-            }
-        });
-        */
     }
 
-
-    /*
-    @OnClick(R.id.selectfile)
-    public void BtnOpenFile(){
-        ButterKnife.bind(this);
-        mFragmentList = new ArrayList<>();
-        mFragmentManager = getSupportFragmentManager();
-        navigationView.setNavigationItemSelectedListener(this);
-        showFragment(StorageFragment.class);
-    }
-
-
-    // Masih mencari solusi bagaimana file dapat dipilih dan dikompres lalu ditampilkan ke TextVIew bluetooth
-    //---------------------------------------------------------------------------------------------
-    /*
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        Dialog dialog = null;
-        switch (id) {
-            case CUSTOM_DIALOG_ID:
-                dialog = new Dialog(StorageActivity.this);
-                dialog.setContentView(R.layout.activity_main);
-                dialog.setCancelable(true);
-                dialog.setCanceledOnTouchOutside(true);
-                //---------------------------------------------------------------------------------
-                ButterKnife.bind(this);
-                initToolbar();
-                mFragmentList = new ArrayList<>();
-                mFragmentManager = getSupportFragmentManager();
-                navigationView.setNavigationItemSelectedListener(this);
-                showFragment(StorageFragment.class); // tampilkan storageFragment class
-
-        }
-        return dialog;
-    }
-    */
     //---------------------------------------------------------------------------------------------
     private void initToolbar() {
         setSupportActionBar(toolbar);

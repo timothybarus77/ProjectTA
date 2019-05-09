@@ -6,12 +6,20 @@
     android:background="#fff"
     android:orientation="vertical">
 
+
+    <TextView
+        android:id="@+id/path_list_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        tools:text="sdcard" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/fragment_storage_path"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ccc"
-        tools:showIn="@layout/path_list_item" />
+        android:background="#ccc" />
+        //tools:showIn="@layout/path_list_item" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/fragment_storage_refresh"

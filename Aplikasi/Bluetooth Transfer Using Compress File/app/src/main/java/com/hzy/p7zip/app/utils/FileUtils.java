@@ -1,8 +1,11 @@
 package com.hzy.p7zip.app.utils;
 
+import android.widget.EditText;
+
 import com.hzy.p7zip.app.bean.FileInfo;
 import com.hzy.p7zip.app.bean.FileType;
-
+import com.hzy.p7zip.app.bluetooth.mainbluetooth;
+import com.hzy.p7zip.app.fragment.StorageFragment;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -10,11 +13,14 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+
+
 /**
  * Created by huzongyao on 17-7-13.
  */
 
 public class FileUtils {
+
 
     private static final String[] ARCHIVE_ARRAY = {"rar", "zip", "7z", "bz2", "bzip2",
             "tbz2", "tbz", "gz", "gzip", "tgz", "tar", "xz", "txz"};
@@ -26,24 +32,34 @@ public class FileUtils {
         info.setFileName(file.getName());
         info.setFilePath(file.getAbsolutePath());
         info.setFileType(FileType.fileunknown);
+        /**
+         * Menunjukan Jumlah file dalam direktori
+         */
         if (file.isDirectory()) {
             info.setFolder(true);
             info.setFileType(FileType.folderEmpty);
+            /**
+             * Mengambil file dan jumlah file yang ada dalam folder
+             */
             String[] fileList = file.list();
             if (fileList != null) {
-                if (fileList.length > 0) {
+               if (fileList.length > 0) {
                     info.setSubCount(fileList.length);
-                    info.setFileType(FileType.folderFull);
+                   info.setFileType(FileType.folderFull);
                 }
             }
-        } else {
-            info.setFileLength(file.length());
-            if (isArchive(file)) {
-                info.setFileType(FileType.filearchive);
+        } else{
+            // Add method untuk mendapatkan path file
+                info.setFileLength(file.length()); //menunjukan ukuran besar file
+                if (isArchive(file)) {
+                  info.setFileType(FileType.filearchive);
+                }
             }
-        }
         return info;
-    }
+        }
+
+
+
 
     private static boolean isArchive(File file) {
         String fileName = file.getName();
@@ -56,6 +72,11 @@ public class FileUtils {
         return false;
     }
 
+    /**
+     * Method Utama untuk memilih file dan folder
+     * @param path
+     * @return
+     */
     public static List<FileInfo> getInfoListFromPath(String path) {
         List<FileInfo> fileInfos = new ArrayList<>();
         File folder = new File(path);
