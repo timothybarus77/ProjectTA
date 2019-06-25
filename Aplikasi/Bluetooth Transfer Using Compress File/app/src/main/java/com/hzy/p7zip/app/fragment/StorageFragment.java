@@ -182,12 +182,9 @@ public class StorageFragment extends Fragment
                  * Parsing string ke intent sebelumnya untuk mengirimkan file
                  */
                 String PathFile = info.getFilePath();
-                Bundle bundle = new Bundle();
-                bundle.putString("pathId", PathFile);
-                Intent i = new Intent(getContext(), mainbluetooth.class);
-                Log.i("check2", bundle.toString());
-                i.putExtras(bundle);
-                startActivity(i);
+                Intent NextIntent = new Intent(getContext(), mainbluetooth.class);
+                NextIntent.putExtra("pathId", PathFile);
+                startActivity(NextIntent);
             }
         }
     }

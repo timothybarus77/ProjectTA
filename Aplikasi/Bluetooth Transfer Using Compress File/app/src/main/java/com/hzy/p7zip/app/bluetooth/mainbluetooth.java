@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -44,9 +46,11 @@ public class mainbluetooth extends AppCompatActivity {
         setContentView(R.layout.activity_mainbluetooth);
         ButterKnife.bind(this);
         dataPath = (EditText) findViewById(R.id.file_path);
-        Bundle bundle = getIntent().getExtras();
-        String Pathname = bundle.getString("pathId");
-        dataPath.setText(Pathname);
+
+        Intent pathIntent = getIntent();
+        String pathName = pathIntent.getStringExtra("pathId");
+        dataPath.setText(pathName);
+        Log.i("Check3", dataPath.toString());
     }
 
     @OnClick(R.id.Sendblue)
@@ -96,6 +100,8 @@ public class mainbluetooth extends AppCompatActivity {
                 i.setAction(Intent.ACTION_SEND);
                 i.setType("*/*");
                 File file = new File(dataPath.getText().toString());
+
+                //Uri filesend = FileProvider.getUriForFile(mainbluetooth.this, )
 
                 i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
 
